@@ -145,8 +145,8 @@ void main() {
         expect(entity.category, 'Device');
       });
 
-      test('should calculate deposit as ~3% of price with \$20 minimum', () {
-        // Price = 500, 3% = 15, clamped to minimum 20
+      test('should calculate deposit as \$50 for >= \$1000, \$20 for < \$1000', () {
+        // Price = 500 (< $1000) → deposit = $20
         final model1 = DeviceModel.fromJson({
           'id': '4',
           'name': 'Cheap Phone',
@@ -154,13 +154,37 @@ void main() {
         });
         expect(model1.toEntity().deposit, 20.0);
 
-        // Price = 1849, 3% = 55.47
+        // Price = 1849 (>= $1000) → deposit = $50
         final model2 = DeviceModel.fromJson({
           'id': '5',
           'name': 'MacBook Pro',
           'data': {'price': 1849},
         });
-        expect(model2.toEntity().deposit, greaterThan(50));
+        expect(model2.toEntity().deposit, 50.0);
+
+        // Price = 999 (< $1000) → deposit = $20
+        final model3 = DeviceModel.fromJson({
+          'id': '6',
+          'name': 'Mid Phone',
+          'data': {'price': 999},
+        });
+        expect(model3.toEntity().deposit, 20.0);
+
+        // Price = 1000 (exactly $1000) → deposit = $50
+        final model4 = DeviceModel.fromJson({
+          'id': '7',
+          'name': 'Borderline Device',
+          'data': {'price': 1000},
+        });
+        expect(model4.toEntity().deposit, 50.0);
+
+        // Missing price → deposit = null
+        final model5 = DeviceModel.fromJson({
+          'id': '8',
+          'name': 'No Price Device',
+          'data': null,
+        });
+        expect(model5.toEntity().deposit, isNull);
       });
     });
 

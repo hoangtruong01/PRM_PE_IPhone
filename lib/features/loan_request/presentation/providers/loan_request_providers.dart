@@ -84,6 +84,7 @@ class LoanRequestFormNotifier extends StateNotifier<LoanRequestFormState> {
 
   LoanRequestFormNotifier(this._ref) : super(const LoanRequestFormInitial());
 
+  // [GHI CHÚ] Hàm xử lý gửi yêu cầu mượn thiết bị
   Future<void> submitRequest({
     required String deviceId,
     required String deviceName,
@@ -93,8 +94,10 @@ class LoanRequestFormNotifier extends StateNotifier<LoanRequestFormState> {
     required String purpose,
     required double deposit,
   }) async {
+    // 1. Chuyển trạng thái Form sang đang gửi (Submitting) để hiển thị indicator load trên giao diện
     state = const LoanRequestFormSubmitting();
 
+    // 2. Tạo đối tượng Entity lưu trữ thông tin yêu cầu mượn
     final request = LoanRequestEntity(
       deviceId: deviceId,
       studentId: studentId,
@@ -105,19 +108,21 @@ class LoanRequestFormNotifier extends StateNotifier<LoanRequestFormState> {
       status: 'pending',
     );
 
-    // If offline, save as pending locally and return offline success info
+    // 3. Kiểm tra trạng thái mạng của ứng dụng thông qua isOfflineProvider
     final isOffline = _ref.read(isOfflineProvider);
     if (isOffline) {
       try {
+        // [TRƯỜNG HỢP OFFLINE]
+        // 3.1 Lấy nguồn dữ liệu Local và lưu yêu cầu mượn tạm thời vào cơ sở dữ liệu nội bộ (Pending Request)
         final localDS = await _ref.read(loanRequestLocalDataSourceProvider.future);
         final model = LoanRequestModel.fromEntity(request);
         await localDS.savePendingRequest(model, deviceName);
         
-        // Clean draft upon submission
+        // 3.2 Xóa bản nháp (Draft) của thiết bị này vì đã gửi yêu cầu mượn thành công (đang chờ đồng bộ)
         final deleteUseCase = await _ref.read(deleteDraftUseCaseProvider.future);
         await deleteUseCase(deviceId);
 
-        // Success state with special local indicator
+        // 3.3 Trả về trạng thái Thành công tạm thời với cờ hiệu 'isOffline': true
         state = LoanRequestFormSuccess({
           'id': 'offline_${DateTime.now().millisecondsSinceEpoch}',
           'createdAt': 'Saved locally (Pending Sync)',
@@ -129,12 +134,15 @@ class LoanRequestFormNotifier extends StateNotifier<LoanRequestFormState> {
           'isOffline': true,
         });
       } catch (e) {
+        // Nếu lưu nội bộ thất bại, trả về trạng thái Lỗi
         state = LoanRequestFormError('Offline submission failed: ${e.toString()}');
       }
       return;
     }
 
+    // [TRƯỜNG HỢP ONLINE]
     try {
+      // 3.4 Gọi UseCase SubmitLoanRequest để gửi yêu cầu lên server thông qua Remote DataSource
       final useCase =
           await _ref.read(submitLoanRequestUseCaseProvider.future);
       final result = await useCase(
@@ -142,6 +150,7 @@ class LoanRequestFormNotifier extends StateNotifier<LoanRequestFormState> {
         deviceName: deviceName,
       );
 
+      // 3.5 Nhận kết quả từ UseCase và cập nhật State tương ứng (Success hoặc Error)
       switch (result) {
         case Success<Map<String, dynamic>>():
           state = LoanRequestFormSuccess(result.data);
@@ -153,6 +162,7 @@ class LoanRequestFormNotifier extends StateNotifier<LoanRequestFormState> {
     }
   }
 
+  // [GHI CHÚ] Reset lại trạng thái Form về mặc định ban đầu
   void reset() {
     state = const LoanRequestFormInitial();
   }

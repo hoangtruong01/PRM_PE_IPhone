@@ -85,13 +85,11 @@ class DeviceModel {
     return null;
   }
 
-  /// Convert Data Model → Domain Entity
-  /// The mapping logic handles optional/missing fields safely.
   DeviceEntity toEntity() {
     final double? price = _parseDouble(data?['price'] ?? data?['Price']);
-    // Estimate deposit as ~3% of price, minimum $20
+    // Deposit rule: $50 for devices >= $1000, $20 for devices < $1000
     final double? deposit = price != null
-        ? (price * 0.03).clamp(20.0, double.infinity)
+        ? (price >= 1000 ? 50.0 : 20.0)
         : null;
 
     return DeviceEntity(

@@ -130,5 +130,37 @@ void main() {
       );
       expect(invalid.isValidReturnDate, false);
     });
+
+    test('should reject borrow date in the past', () {
+      final pastDate = LoanRequestEntity(
+        deviceId: '7',
+        studentId: 'SE1819',
+        borrowDate: DateTime.now().subtract(const Duration(days: 1)),
+        returnDate: DateTime.now().add(const Duration(days: 6)),
+        purpose: 'Demo',
+        deposit: 50,
+      );
+      expect(pastDate.isValidBorrowDate, false);
+
+      final today = LoanRequestEntity(
+        deviceId: '7',
+        studentId: 'SE1819',
+        borrowDate: DateTime.now(),
+        returnDate: DateTime.now().add(const Duration(days: 7)),
+        purpose: 'Demo',
+        deposit: 50,
+      );
+      expect(today.isValidBorrowDate, true);
+
+      final future = LoanRequestEntity(
+        deviceId: '7',
+        studentId: 'SE1819',
+        borrowDate: DateTime.now().add(const Duration(days: 5)),
+        returnDate: DateTime.now().add(const Duration(days: 12)),
+        purpose: 'Demo',
+        deposit: 50,
+      );
+      expect(future.isValidBorrowDate, true);
+    });
   });
 }

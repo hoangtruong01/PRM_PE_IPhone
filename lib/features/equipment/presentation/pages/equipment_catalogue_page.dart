@@ -734,36 +734,42 @@ class EquipmentCataloguePage extends ConsumerWidget {
                   style: TextStyle(fontSize: 15, color: Colors.grey),
                 ),
               )
-            : ListView.builder(
-                padding: const EdgeInsets.only(bottom: 8),
-                itemCount: filteredDevices.length,
-                itemBuilder: (context, index) {
-                  final device = filteredDevices[index];
-                  return DeviceCard(
-                    device: device,
-                    isInWatchlist: watchlist.contains(device.id),
-                    isInCompareList: compareList.contains(device.id),
-                    onTap: () {
-                      context.push('/device/${device.id}');
-                    },
-                    onWatchlistTap: () {
-                      ref.read(watchlistProvider.notifier).toggle(device.id);
-                    },
-                    onCompareTap: () {
-                      final success = ref
-                          .read(compareListProvider.notifier)
-                          .toggleCompare(device.id);
-                      if (!success) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('You can compare at most 2 devices.'),
-                            backgroundColor: Colors.red,
-                          ),
-                        );
-                      }
-                    },
-                  );
+            : RefreshIndicator(
+                color: const Color(0xFF0E9282),
+                onRefresh: () async {
+                  await ref.read(devicesStateProvider.notifier).refresh();
                 },
+                child: ListView.builder(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  itemCount: filteredDevices.length,
+                  itemBuilder: (context, index) {
+                    final device = filteredDevices[index];
+                    return DeviceCard(
+                      device: device,
+                      isInWatchlist: watchlist.contains(device.id),
+                      isInCompareList: compareList.contains(device.id),
+                      onTap: () {
+                        context.push('/device/${device.id}');
+                      },
+                      onWatchlistTap: () {
+                        ref.read(watchlistProvider.notifier).toggle(device.id);
+                      },
+                      onCompareTap: () {
+                        final success = ref
+                            .read(compareListProvider.notifier)
+                            .toggleCompare(device.id);
+                        if (!success) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('You can compare at most 2 devices.'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        }
+                      },
+                    );
+                  },
+                ),
               ),
     };
   }

@@ -27,19 +27,26 @@ class LoanRequestPage extends ConsumerStatefulWidget {
 }
 
 class _LoanRequestPageState extends ConsumerState<LoanRequestPage> {
+  // [GHI CHÚ] Khóa GlobalKey dùng để quản lý trạng thái của Form (validate, submit)
   final _formKey = GlobalKey<FormState>();
+
+  // [GHI CHÚ] Bộ điều khiển nhập liệu (Controller) cho mã số sinh viên và lý do mượn
   final _studentIdController = TextEditingController();
   final _purposeController = TextEditingController();
 
+  // [GHI CHÚ] Biến trạng thái lưu ngày mượn và ngày trả
+  // Mặc định ngày mượn là hôm nay, ngày trả là 7 ngày sau
   DateTime _borrowDate = DateTime.now();
   DateTime _returnDate = DateTime.now().add(const Duration(days: 7));
 
   @override
   void initState() {
     super.initState();
+    // [GHI CHÚ] Lắng nghe sự thay đổi của các ô nhập liệu để tự động lưu bản nháp (Draft)
     _studentIdController.addListener(_onFieldChanged);
     _purposeController.addListener(_onFieldChanged);
-    // Load persisted draft on startup
+    
+    // [GHI CHÚ] Tự động tải lại bản nháp đã lưu trong Local Storage sau khi giao diện render xong (post frame)
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadSavedDraft();
     });
@@ -47,6 +54,7 @@ class _LoanRequestPageState extends ConsumerState<LoanRequestPage> {
 
   @override
   void dispose() {
+    // [GHI CHÚ] Hủy đăng ký lắng nghe sự kiện và hủy các controller để tránh rò rỉ bộ nhớ (memory leak)
     _studentIdController.removeListener(_onFieldChanged);
     _purposeController.removeListener(_onFieldChanged);
     _studentIdController.dispose();
@@ -54,16 +62,21 @@ class _LoanRequestPageState extends ConsumerState<LoanRequestPage> {
     super.dispose();
   }
 
+  // [GHI CHÚ] Hàm kích hoạt lưu nháp mỗi khi người dùng thay đổi dữ liệu trong ô nhập
   void _onFieldChanged() {
     _saveDraft();
   }
 
+  // [GHI CHÚ] Tính số ngày mượn (được tính bằng hiệu số ngày giữa ngày trả và ngày mượn)
   int get _loanPeriodDays => _returnDate.difference(_borrowDate).inDays;
 
+  // [GHI CHÚ] Đọc bản nháp đã lưu từ cơ sở dữ liệu nội bộ (Local Storage) thông qua UseCase
   Future<void> _loadSavedDraft() async {
     try {
       final loadUseCase = await ref.read(loadDraftUseCaseProvider.future);
       final result = await loadUseCase(widget.deviceId);
+      
+      // Nếu tải bản nháp thành công và có dữ liệu, cập nhật lại trạng thái giao diện (UI state)
       if (result is Success<LoanRequestEntity?> && result.data != null) {
         final draft = result.data!;
         setState(() {
@@ -76,6 +89,7 @@ class _LoanRequestPageState extends ConsumerState<LoanRequestPage> {
     } catch (_) {}
   }
 
+  // [GHI CHÚ] Lưu dữ liệu hiện tại vào bản nháp cục bộ (Local Storage) để không bị mất khi đóng app đột ngột
   Future<void> _saveDraft() async {
     try {
       final saveUseCase = await ref.read(saveDraftUseCaseProvider.future);
@@ -85,7 +99,7 @@ class _LoanRequestPageState extends ConsumerState<LoanRequestPage> {
         borrowDate: _borrowDate,
         returnDate: _returnDate,
         purpose: _purposeController.text,
-        deposit: 0.0,
+        deposit: 0.0, // Bản nháp chưa xử lý tiền cọc cụ thể
       );
       await saveUseCase(draft);
     } catch (_) {}
@@ -93,15 +107,18 @@ class _LoanRequestPageState extends ConsumerState<LoanRequestPage> {
 
   @override
   Widget build(BuildContext context) {
+    // [GHI CHÚ] Lắng nghe trạng thái chi tiết thiết bị và trạng thái gửi Form của Riverpod
     final deviceState = ref.watch(deviceDetailProvider(widget.deviceId));
     final formState = ref.watch(loanRequestFormStateProvider);
 
     const activeTeal = Color(0xFF0E9282);
 
-    // Listen for submission success to navigate to result
+    // [GHI CHÚ] Lắng nghe thay đổi trạng thái của formState để xử lý điều hướng hoặc hiển thị lỗi
+    // Dùng ref.listen thay vì ref.watch vì hành động điều hướng/hiển thị SnackBar là side-effect (chỉ chạy 1 lần khi trạng thái thay đổi)
     ref.listen<LoanRequestFormState>(loanRequestFormStateProvider,
         (previous, next) {
       if (next is LoanRequestFormSuccess) {
+        // [GHI CHÚ] Nếu gửi thành công, chuyển hướng tới trang Kết quả (RequestResultPage) kèm thông tin phản hồi
         final device = deviceState is DeviceDetailLoaded
             ? deviceState.device
             : null;
@@ -113,6 +130,7 @@ class _LoanRequestPageState extends ConsumerState<LoanRequestPage> {
           'deposit': device?.deposit ?? 0.0,
         });
       } else if (next is LoanRequestFormError) {
+        // [GHI CHÚ] Nếu gặp lỗi, hiển thị thông báo SnackBar lỗi màu đỏ ở dưới màn hình
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(next.message),
@@ -491,8 +509,12 @@ class _LoanRequestPageState extends ConsumerState<LoanRequestPage> {
     );
   }
 
+  // [GHI CHÚ] Hàm thực hiện gửi Form lên hệ thống
   void _submitForm(String deviceName, double deposit) {
+    // 1. Kiểm tra tính hợp lệ của tất cả các trường nhập liệu trong Form (sử dụng validator của TextFormField)
     if (_formKey.currentState?.validate() ?? false) {
+      // 2. Nếu Form hợp lệ, gọi hàm submitRequest của LoanRequestFormNotifier thông qua Riverpod
+      // Dữ liệu bao gồm: ID thiết bị, Tên thiết bị, Mã số sinh viên, Ngày mượn, Ngày trả, Mục đích và Tiền đặt cọc.
       ref.read(loanRequestFormStateProvider.notifier).submitRequest(
             deviceId: widget.deviceId,
             deviceName: deviceName,
