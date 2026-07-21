@@ -3,21 +3,21 @@
 import '../../../../core/utils/result.dart';
 import '../entities/loan_request_entity.dart';
 
-/// Repository Interface for loan requests (Domain Layer).
-/// Defines the contract — implementation is in data layer.
+/// Giao diện Repository cho các yêu cầu mượn thiết bị (Domain Layer).
+/// Định nghĩa hợp đồng (contract) — phần triển khai nằm ở lớp Data.
 abstract class LoanRequestRepository {
-  /// Submit a loan request to the remote API
+  /// Gửi yêu cầu mượn thiết bị lên remote API
   Future<Result<Map<String, dynamic>>> submitLoanRequest({
     required LoanRequestEntity request,
     required String deviceName,
   });
 
-  /// Save a loan request draft locally
+  /// Lưu bản nháp yêu cầu mượn cục bộ
   Future<Result<void>> saveDraft(LoanRequestEntity request);
 
-  /// Load a saved draft
+  /// Tải bản nháp đã lưu
   Future<Result<LoanRequestEntity?>> loadDraft(String deviceId);
 
-  /// Delete a saved draft
+  /// Xóa bản nháp đã lưu
   Future<Result<void>> deleteDraft(String deviceId);
 }

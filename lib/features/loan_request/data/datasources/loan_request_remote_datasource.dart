@@ -5,11 +5,11 @@ import '../../../../core/error/exceptions.dart';
 import '../../../../core/network/network_client.dart';
 import '../models/loan_request_model.dart';
 
-/// Remote DataSource for loan requests.
-/// Handles the POST request to submit a loan request.
+/// Nguồn dữ liệu từ xa (Remote DataSource) cho các yêu cầu mượn thiết bị.
+/// Xử lý yêu cầu POST để gửi yêu cầu mượn.
 abstract class LoanRequestRemoteDataSource {
-  /// Submit a loan request to the API
-  /// Returns the raw response JSON containing id, createdAt, etc.
+  /// Gửi yêu cầu mượn thiết bị lên API
+  /// Trả về phản hồi JSON thô chứa id, createdAt, v.v.
   Future<Map<String, dynamic>> submitLoanRequest(
     LoanRequestModel request, {
     required String deviceName,

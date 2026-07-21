@@ -11,7 +11,7 @@ class CampusEquipmentLoanApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
 
-    // Read the pendingRequestSyncProvider so it is active and listens to connectivity changes.
+    // Đọc pendingRequestSyncProvider để kích hoạt và lắng nghe các thay đổi về kết nối mạng.
     ref.watch(pendingRequestSyncProvider);
 
     return MaterialApp.router(

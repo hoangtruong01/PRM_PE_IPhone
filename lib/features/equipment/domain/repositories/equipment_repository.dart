@@ -3,17 +3,17 @@
 import '../../../../core/utils/result.dart';
 import '../entities/device_entity.dart';
 
-/// Repository Interface (Domain Layer)
-/// Defines the contract for data operations. The domain layer depends on
-/// this abstraction, NOT on the concrete implementation (Dependency Inversion).
-/// This makes the domain layer independent of data sources (API, cache, etc.)
+/// Giao diện Repository (Domain Layer)
+/// Định nghĩa các hàm thao tác với dữ liệu. Lớp domain phụ thuộc vào
+/// lớp trừu tượng này chứ KHÔNG phụ thuộc vào triển khai chi tiết (Dependency Inversion).
+/// Nhờ đó, lớp domain hoàn toàn độc lập với nguồn dữ liệu (API, cache, v.v.)
 abstract class EquipmentRepository {
-  /// Get all devices from remote API (with cache fallback)
+  /// Lấy tất cả thiết bị từ remote API (có hỗ trợ lấy từ cache dự phòng)
   Future<Result<List<DeviceEntity>>> getDevices();
 
-  /// Get a single device by ID
+  /// Lấy thông tin chi tiết một thiết bị theo ID
   Future<Result<DeviceEntity>> getDeviceById(String id);
 
-  /// Get devices from local cache
+  /// Lấy danh sách thiết bị từ cache cục bộ
   Future<Result<List<DeviceEntity>>> getCachedDevices();
 }

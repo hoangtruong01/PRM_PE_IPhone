@@ -1,7 +1,7 @@
 // lib/features/loan_request/domain/entities/loan_result_entity.dart
 
-/// Domain Entity: Represents the result of a successful loan request.
-/// Contains the data returned from the POST response.
+/// Thực thể Domain (Domain Entity): Đại diện cho kết quả của yêu cầu mượn thành công.
+/// Chứa các thông tin được trả về từ phản hồi của yêu cầu POST.
 class LoanResultEntity {
   final String requestId;
   final String deviceName;
@@ -21,7 +21,7 @@ class LoanResultEntity {
     required this.createdAt,
   });
 
-  /// Loan period in days
+  /// Thời gian mượn thiết bị tính theo ngày
   int get loanPeriodDays => returnDate.difference(borrowDate).inDays;
 
   @override

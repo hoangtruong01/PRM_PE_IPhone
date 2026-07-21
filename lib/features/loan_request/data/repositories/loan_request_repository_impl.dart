@@ -9,9 +9,9 @@ import '../datasources/loan_request_local_datasource.dart';
 import '../datasources/loan_request_remote_datasource.dart';
 import '../models/loan_request_model.dart';
 
-/// Repository Implementation for loan requests.
-/// Coordinates between remote API and local storage.
-/// Converts exceptions to Result types for clean error handling.
+/// Triển khai Repository cho các yêu cầu mượn thiết bị.
+/// Điều phối giữa remote API và bộ nhớ cục bộ (local storage).
+/// Chuyển đổi các ngoại lệ thành kiểu dữ liệu Result để xử lý lỗi sạch sẽ.
 class LoanRequestRepositoryImpl implements LoanRequestRepository {
   final LoanRequestRemoteDataSource _remoteDataSource;
   final LoanRequestLocalDataSource _localDataSource;
@@ -35,20 +35,20 @@ class LoanRequestRepositoryImpl implements LoanRequestRepository {
         deviceName: deviceName,
       );
 
-      // Clean up draft after successful submission
+      // Dọn dẹp bản nháp sau khi gửi thành công
       try {
         await _localDataSource.deleteDraft(request.deviceId);
       } catch (_) {
-        // Ignore draft cleanup errors
+        // Bỏ qua lỗi dọn dẹp bản nháp
       }
 
       return Success(response);
     } on ServerException catch (e) {
-      // Save as pending for retry
+      // Lưu lại dưới dạng yêu cầu đang chờ xử lý để thử lại sau
       try {
         await _localDataSource.savePendingRequest(model, deviceName);
       } catch (_) {
-        // Ignore pending save errors
+        // Bỏ qua lỗi lưu yêu cầu chờ xử lý
       }
       return Error(ServerFailure(e.message, statusCode: e.statusCode));
     } catch (e) {

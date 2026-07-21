@@ -1,7 +1,7 @@
 // lib/core/utils/result.dart
 
-/// A generic Result type for clean error handling without exceptions.
-/// Used by repositories to return either success data or a Failure.
+/// Kiểu dữ liệu Result tổng quát (generic) để xử lý lỗi sạch sẽ mà không cần ném ngoại lệ (exception).
+/// Được các Repository sử dụng để trả về dữ liệu thành công (Success) hoặc lỗi (Failure).
 import '../error/failures.dart';
 
 sealed class Result<T> {

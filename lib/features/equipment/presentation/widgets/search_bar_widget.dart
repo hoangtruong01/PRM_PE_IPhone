@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 
-/// Search bar widget for filtering devices by name.
+/// Widget thanh tìm kiếm để lọc danh sách thiết bị theo tên.
 class SearchBarWidget extends StatelessWidget {
   final ValueChanged<String> onChanged;
   final String hintText;

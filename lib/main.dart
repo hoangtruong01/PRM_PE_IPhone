@@ -8,7 +8,7 @@ import 'app/providers.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-  // Pre-initialize SharedPreferences for Riverpod sync injection
+  // Khởi tạo SharedPreferences trước khi chạy ứng dụng để truyền vào Riverpod
   final sharedPrefs = await SharedPreferences.getInstance();
   
   runApp(

@@ -3,9 +3,9 @@
 import 'dart:convert';
 import '../../domain/entities/device_entity.dart';
 
-/// Data Model: Maps between raw JSON and the Domain Entity.
-/// The Model knows about JSON serialization; the Entity does not.
-/// This separation means changing the API response format only affects the Model.
+/// Mô hình dữ liệu (Data Model): Chuyển đổi qua lại giữa JSON thô và thực thể Domain (Entity).
+/// Model này hiểu về việc tuần tự hóa JSON; còn Entity thì không.
+/// Sự phân tách này giúp việc thay đổi định dạng phản hồi API chỉ ảnh hưởng đến Model.
 class DeviceModel {
   final String id;
   final String name;
@@ -17,7 +17,7 @@ class DeviceModel {
     this.data,
   });
 
-  /// Create a DeviceModel from JSON (API response)
+  /// Tạo một DeviceModel từ JSON (phản hồi API)
   factory DeviceModel.fromJson(Map<String, dynamic> json) {
     return DeviceModel(
       id: json['id'].toString(),
@@ -26,7 +26,7 @@ class DeviceModel {
     );
   }
 
-  /// Convert to JSON for caching
+  /// Chuyển đổi sang JSON để lưu cache
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -35,15 +35,15 @@ class DeviceModel {
     };
   }
 
-  /// Convert to JSON string for local storage
+  /// Chuyển đổi sang chuỗi JSON để lưu trữ cục bộ
   String toJsonString() => json.encode(toJson());
 
-  /// Create from JSON string (from cache)
+  /// Tạo từ chuỗi JSON (từ cache)
   factory DeviceModel.fromJsonString(String jsonString) {
     return DeviceModel.fromJson(json.decode(jsonString));
   }
 
-  /// Infer the category from the device name
+  /// Suy luận danh mục (category) từ tên thiết bị
   static String _inferCategory(String name) {
     final lower = name.toLowerCase();
     if (lower.contains('macbook') ||
@@ -68,7 +68,7 @@ class DeviceModel {
     }
   }
 
-  /// Helper to safely parse a double from dynamic value
+  /// Hàm hỗ trợ phân tích an toàn kiểu double từ giá trị dynamic
   static double? _parseDouble(dynamic value) {
     if (value == null) return null;
     if (value is num) return value.toDouble();
@@ -76,7 +76,7 @@ class DeviceModel {
     return null;
   }
 
-  /// Helper to safely parse an int from dynamic value
+  /// Hàm hỗ trợ phân tích an toàn kiểu int từ giá trị dynamic
   static int? _parseInt(dynamic value) {
     if (value == null) return null;
     if (value is int) return value;
@@ -87,7 +87,7 @@ class DeviceModel {
 
   DeviceEntity toEntity() {
     final double? price = _parseDouble(data?['price'] ?? data?['Price']);
-    // Deposit rule: $50 for devices >= $1000, $20 for devices < $1000
+    // Quy tắc tính tiền cọc: $50 cho các thiết bị có giá >= $1000, và $20 cho các thiết bị có giá < $1000
     final double? deposit = price != null
         ? (price >= 1000 ? 50.0 : 20.0)
         : null;
@@ -115,7 +115,7 @@ class DeviceModel {
     );
   }
 
-  /// Convert a list of JSON objects to a list of DeviceModels
+  /// Chuyển đổi danh sách đối tượng JSON thành danh sách DeviceModel
   static List<DeviceModel> fromJsonList(List<dynamic> jsonList) {
     return jsonList
         .where((json) => json is Map<String, dynamic>)
@@ -123,12 +123,12 @@ class DeviceModel {
         .toList();
   }
 
-  /// Convert a list of DeviceModels to JSON string for caching
+  /// Chuyển đổi danh sách DeviceModel thành chuỗi JSON để lưu cache
   static String listToJsonString(List<DeviceModel> models) {
     return json.encode(models.map((m) => m.toJson()).toList());
   }
 
-  /// Create a list of DeviceModels from cached JSON string
+  /// Tạo danh sách DeviceModel từ chuỗi JSON đã lưu cache
   static List<DeviceModel> listFromJsonString(String jsonString) {
     final List<dynamic> list = json.decode(jsonString);
     return fromJsonList(list);

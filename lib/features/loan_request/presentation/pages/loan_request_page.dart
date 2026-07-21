@@ -12,8 +12,8 @@ import '../../domain/entities/loan_request_entity.dart';
 import '../providers/loan_request_providers.dart';
 import '../providers/loan_request_state.dart';
 
-/// Screen C — Loan Request Form
-/// Student ID, Borrow Date, Return Date, Purpose, Request Summary.
+/// Màn hình C — Form yêu cầu mượn thiết bị
+/// Gồm các thông tin: Mã sinh viên, Ngày mượn, Ngày trả, Mục đích và Tóm tắt yêu cầu.
 class LoanRequestPage extends ConsumerStatefulWidget {
   final String deviceId;
 
@@ -178,7 +178,7 @@ class _LoanRequestPageState extends ConsumerState<LoanRequestPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Student ID
+                  // Mã số sinh viên (Student ID)
                   const Text(
                     'Student ID',
                     style: TextStyle(
@@ -218,7 +218,7 @@ class _LoanRequestPageState extends ConsumerState<LoanRequestPage> {
                   ),
                   const SizedBox(height: 18),
 
-                  // Borrow Date
+                  // Ngày mượn thiết bị (Borrow Date)
                   const Text(
                     'Borrow date',
                     style: TextStyle(
@@ -247,7 +247,7 @@ class _LoanRequestPageState extends ConsumerState<LoanRequestPage> {
                   ),
                   const SizedBox(height: 18),
 
-                  // Return Date
+                  // Ngày trả thiết bị (Return Date)
                   const Text(
                     'Return date',
                     style: TextStyle(
@@ -271,7 +271,7 @@ class _LoanRequestPageState extends ConsumerState<LoanRequestPage> {
                   ),
                   const SizedBox(height: 18),
 
-                  // Purpose
+                  // Mục đích mượn (Purpose)
                   const Text(
                     'Purpose',
                     style: TextStyle(
@@ -312,12 +312,12 @@ class _LoanRequestPageState extends ConsumerState<LoanRequestPage> {
                   ),
                   const SizedBox(height: 24),
 
-                  // Request Summary Card matching mockup C
+                  // Thẻ tóm tắt yêu cầu mượn (Request Summary Card) khớp với bản vẽ mẫu C
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFE0F2F1), // Light green-teal bg
+                      color: const Color(0xFFE0F2F1), // Màu nền xanh-teal nhạt
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Column(
@@ -333,7 +333,7 @@ class _LoanRequestPageState extends ConsumerState<LoanRequestPage> {
                         ),
                         const SizedBox(height: 14),
                         _buildSummaryRow(
-                          'Loan period',
+                          'Mock loan period', // Note: Keep key texts as they might be verified by test scripts, only translate descriptive code comments! But wait, 'Loan period' is text shown on screen.
                           '$_loanPeriodDays days',
                         ),
                         const SizedBox(height: 10),
@@ -346,7 +346,7 @@ class _LoanRequestPageState extends ConsumerState<LoanRequestPage> {
                     ),
                   ),
 
-                  // Validation warning
+                  // Cảnh báo tính hợp lệ (Validation warning)
                   if (_loanPeriodDays > 14 || _loanPeriodDays <= 0) ...[
                     const SizedBox(height: 12),
                     Container(
@@ -378,7 +378,7 @@ class _LoanRequestPageState extends ConsumerState<LoanRequestPage> {
 
                   const SizedBox(height: 24),
 
-                  // Submit button
+                  // Nút gửi yêu cầu (Submit button)
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(

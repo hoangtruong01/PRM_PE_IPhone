@@ -18,49 +18,49 @@ import '../../domain/usecases/get_device_by_id_usecase.dart';
 import '../../domain/usecases/get_devices_usecase.dart';
 import 'equipment_state.dart';
 
-// ─── Infrastructure Providers ────────────────────────────────────
+// ─── Các Provider cơ sở hạ tầng (Infrastructure) ──────────────────
 
-/// HTTP Client provider
+/// Provider cung cấp HTTP Client
 final httpClientProvider = Provider<http.Client>((ref) {
   final client = http.Client();
   ref.onDispose(() => client.close());
   return client;
 });
 
-/// Network client provider
+/// Provider cung cấp Network Client
 final networkClientProvider = Provider<NetworkClient>((ref) {
   return NetworkClient(ref.watch(httpClientProvider));
 });
 
-/// Local storage key-value wrapper provider
+/// Provider cung cấp lớp bọc lưu trữ cục bộ (Local Storage Wrapper)
 final localStorageProvider = FutureProvider<LocalStorage>((ref) async {
   final sharedPreferences = await ref.watch(sharedPreferencesFutureProvider.future);
   return LocalStorage(sharedPreferences);
 });
 
-// Helper future provider to await SharedPreferences
+// FutureProvider hỗ trợ lấy đối tượng SharedPreferences
 final sharedPreferencesFutureProvider = FutureProvider<SharedPreferences>((ref) async {
   return SharedPreferences.getInstance();
 });
 
-// ─── DataSource Providers ────────────────────────────────────────
+// ─── Các Provider cung cấp nguồn dữ liệu (DataSource) ───────────────
 
-/// Remote datasource provider
+/// Provider cung cấp nguồn dữ liệu từ xa (Remote DataSource)
 final equipmentRemoteDataSourceProvider =
     Provider<EquipmentRemoteDataSource>((ref) {
   return EquipmentRemoteDataSourceImpl(ref.watch(networkClientProvider));
 });
 
-/// Local datasource provider
+/// Provider cung cấp nguồn dữ liệu cục bộ (Local DataSource)
 final equipmentLocalDataSourceProvider =
     FutureProvider<EquipmentLocalDataSource>((ref) async {
   final storage = await ref.watch(localStorageProvider.future);
   return EquipmentLocalDataSourceImpl(storage);
 });
 
-// ─── Repository Provider ─────────────────────────────────────────
+// ─── Provider cung cấp kho lưu trữ (Repository) ───────────────────
 
-/// Repository implementation provider (coordinates remote & local cache)
+/// Provider triển khai Repository (điều phối remote & cache cục bộ)
 final equipmentRepositoryProvider =
     FutureProvider<EquipmentRepository>((ref) async {
   final remote = ref.watch(equipmentRemoteDataSourceProvider);
@@ -71,40 +71,40 @@ final equipmentRepositoryProvider =
   );
 });
 
-// ─── UseCase Providers ───────────────────────────────────────────
+// ─── Các Provider cung cấp nghiệp vụ (UseCase) ────────────────────
 
-/// UseCase to get all devices
+/// UseCase lấy danh sách tất cả các thiết bị
 final getDevicesUseCaseProvider =
     FutureProvider<GetDevicesUseCase>((ref) async {
   final repo = await ref.watch(equipmentRepositoryProvider.future);
   return GetDevicesUseCase(repo);
 });
 
-/// UseCase to get device details by ID
+/// UseCase lấy thông tin chi tiết một thiết bị theo ID
 final getDeviceByIdUseCaseProvider =
     FutureProvider<GetDeviceByIdUseCase>((ref) async {
   final repo = await ref.watch(equipmentRepositoryProvider.future);
   return GetDeviceByIdUseCase(repo);
 });
 
-// ─── State Providers ──────────────────────────────────────────────
+// ─── Các Provider quản lý trạng thái (State) ───────────────────────
 
-/// Main devices list state provider
+/// Provider quản lý trạng thái danh sách thiết bị chính
 final devicesStateProvider =
     StateNotifierProvider<DevicesNotifier, EquipmentListState>((ref) {
   return DevicesNotifier(ref);
 });
 
-/// Device detail state provider (per device ID)
+/// Provider quản lý trạng thái chi tiết thiết bị (theo từng ID)
 final deviceDetailProvider = StateNotifierProvider.family<DeviceDetailNotifier,
     DeviceDetailState, String>((ref, deviceId) {
   return DeviceDetailNotifier(ref, deviceId);
 });
 
-/// Search query provider (immediate typing state)
+/// Provider quản lý từ khóa tìm kiếm (lưu từ khóa gõ ngay lập tức)
 final searchQueryProvider = StateProvider<String>((ref) => '');
 
-/// Debounced search query provider (400 ms debounce)
+/// Provider quản lý từ khóa tìm kiếm đã áp dụng debounce (trễ 400 ms)
 final debouncedSearchQueryProvider = Provider<String>((ref) {
   final query = ref.watch(searchQueryProvider);
   final debouncedState = ref.watch(_debouncedSearchStateProvider);
@@ -119,20 +119,20 @@ final debouncedSearchQueryProvider = Provider<String>((ref) {
 
 final _debouncedSearchStateProvider = StateProvider<String>((ref) => '');
 
-/// Selected category filter provider
+/// Provider lưu trữ danh mục lọc thiết bị đang được chọn
 final selectedCategoryProvider = StateProvider<String>((ref) => 'All');
 
-/// Sorting options enum
+/// Enum các tùy chọn sắp xếp thiết bị
 enum DeviceSortOption {
   none,
   nameAsc,
   depositLowToHigh,
 }
 
-/// Selected sort option provider
+/// Provider lưu tùy chọn sắp xếp đang được chọn
 final sortOptionProvider = StateProvider<DeviceSortOption>((ref) => DeviceSortOption.none);
 
-/// Available categories derived from devices list
+/// Danh sách các danh mục khả dụng được suy ra từ danh sách thiết bị
 final availableCategoriesProvider = Provider<List<String>>((ref) {
   final state = ref.watch(devicesStateProvider);
   if (state is EquipmentListLoaded) {
@@ -143,7 +143,7 @@ final availableCategoriesProvider = Provider<List<String>>((ref) {
   return ['All'];
 });
 
-/// Filtered and sorted devices based on category, debounced search, and sort option
+/// Danh sách thiết bị đã được lọc và sắp xếp dựa trên danh mục, từ khóa tìm kiếm và tùy chọn sắp xếp
 final filteredDevicesProvider = Provider<List<DeviceEntity>>((ref) {
   final state = ref.watch(devicesStateProvider);
   final query = ref.watch(debouncedSearchQueryProvider).toLowerCase();
@@ -154,12 +154,12 @@ final filteredDevicesProvider = Provider<List<DeviceEntity>>((ref) {
 
   var devices = List<DeviceEntity>.from(state.devices);
 
-  // Filter by category
+  // Lọc theo danh mục
   if (category != 'All') {
     devices = devices.where((d) => d.category == category).toList();
   }
 
-  // Filter by search query
+  // Lọc theo từ khóa tìm kiếm
   if (query.isNotEmpty) {
     devices = devices
         .where((d) =>
@@ -168,17 +168,17 @@ final filteredDevicesProvider = Provider<List<DeviceEntity>>((ref) {
         .toList();
   }
 
-  // Apply sorting
+  // Áp dụng sắp xếp
   switch (sortOption) {
     case DeviceSortOption.none:
-      // Preserves the original API order
+      // Giữ nguyên thứ tự ban đầu từ API
       break;
     case DeviceSortOption.nameAsc:
       devices.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
       break;
     case DeviceSortOption.depositLowToHigh:
       devices.sort((a, b) {
-        // Handle missing deposit values consistently (placed at the end/max values)
+        // Xử lý các giá trị tiền cọc bị thiếu một cách nhất quán (đặt ở cuối / giá trị lớn nhất)
         final depA = a.deposit ?? double.maxFinite;
         final depB = b.deposit ?? double.maxFinite;
         return depA.compareTo(depB);
@@ -189,17 +189,17 @@ final filteredDevicesProvider = Provider<List<DeviceEntity>>((ref) {
   return devices;
 });
 
-// ─── Watchlist Provider ──────────────────────────────────────────
+// ─── Provider Danh Sách Theo Dõi (Watchlist Provider) ──────────────
 
-/// Watchlist (bookmarked device IDs)
+/// Danh sách theo dõi (các ID thiết bị đã được đánh dấu lưu)
 final watchlistProvider =
     StateNotifierProvider<WatchlistNotifier, Set<String>>((ref) {
   return WatchlistNotifier(ref);
 });
 
-// ─── Compare List Provider ───────────────────────────────────────
+// ─── Provider Danh Sách So Sánh (Compare List Provider) ─────────────
 
-/// Comparison list provider (At most 2 devices, persisted)
+/// Provider danh sách so sánh (Tối đa 2 thiết bị, được lưu trữ lâu dài)
 final compareListProvider =
     StateNotifierProvider<CompareListNotifier, Set<String>>((ref) {
   return CompareListNotifier(ref);
@@ -222,8 +222,8 @@ class CompareListNotifier extends StateNotifier<Set<String>> {
     } catch (_) {}
   }
 
-  /// Toggles compare status of a device. Enforces at most 2 devices.
-  /// Returns false if comparison list is full and user tries to add a third device.
+  /// Bật/tắt trạng thái so sánh của một thiết bị. Giới hạn tối đa 2 thiết bị.
+  /// Trả về false nếu danh sách so sánh đã đầy và người dùng cố gắng thêm thiết bị thứ ba.
   bool toggleCompare(String deviceId) {
     final newSet = Set<String>.from(state);
     if (newSet.contains(deviceId)) {
@@ -233,7 +233,7 @@ class CompareListNotifier extends StateNotifier<Set<String>> {
       return true;
     } else {
       if (newSet.length >= 2) {
-        return false; // Two-device limit enforced here!
+        return false; // Áp dụng giới hạn tối đa 2 thiết bị tại đây!
       }
       newSet.add(deviceId);
       state = newSet;
@@ -250,9 +250,9 @@ class CompareListNotifier extends StateNotifier<Set<String>> {
   }
 }
 
-// ─── State Notifiers ─────────────────────────────────────────────
+// ─── Bộ quản lý trạng thái (State Notifiers) ───────────────────────
 
-/// Notifier for the devices list
+/// Bộ quản lý trạng thái cho danh sách thiết bị
 class DevicesNotifier extends StateNotifier<EquipmentListState> {
   final Ref _ref;
 
@@ -287,7 +287,7 @@ class DevicesNotifier extends StateNotifier<EquipmentListState> {
   }
 }
 
-/// Notifier for device detail
+/// Bộ quản lý trạng thái cho chi tiết thiết bị
 class DeviceDetailNotifier extends StateNotifier<DeviceDetailState> {
   final Ref _ref;
   final String _deviceId;
@@ -320,7 +320,7 @@ class DeviceDetailNotifier extends StateNotifier<DeviceDetailState> {
   }
 }
 
-/// Notifier for watchlist
+/// Bộ quản lý trạng thái cho danh sách theo dõi (watchlist)
 class WatchlistNotifier extends StateNotifier<Set<String>> {
   final Ref _ref;
 
@@ -336,7 +336,7 @@ class WatchlistNotifier extends StateNotifier<Set<String>> {
         state = ids.split(',').toSet();
       }
     } catch (_) {
-      // Ignore errors loading watchlist
+      // Bỏ qua các lỗi khi tải danh sách theo dõi
     }
   }
 
@@ -349,29 +349,29 @@ class WatchlistNotifier extends StateNotifier<Set<String>> {
     }
     state = newSet;
 
-    // Persist
+    // Lưu trữ lâu dài
     try {
       final localStorage = await _ref.read(localStorageProvider.future);
       await localStorage.saveString(
           'watchlist_device_ids', newSet.join(','));
     } catch (_) {
-      // Ignore persistence errors
+      // Bỏ qua lỗi lưu trữ lâu dài
     }
   }
 
   bool isInWatchlist(String deviceId) => state.contains(deviceId);
 }
 
-// ─── Active Tab Provider ──────────────────────────────────────────
+// ─── Provider Quản Lý Tab Đang Hoạt Động (Active Tab Provider) ──────
 
-/// Active tab index in bottom navigation bar:
-/// 0: Home, 1: Explore, 2: Saved, 3: Profile
+/// Chỉ số tab đang hoạt động ở thanh điều hướng dưới cùng (Bottom Navigation Bar):
+/// 0: Trang chủ, 1: Khám phá, 2: Đã lưu, 3: Hồ sơ
 final activeTabProvider = StateNotifierProvider<ActiveTabNotifier, int>((ref) {
   return ActiveTabNotifier();
 });
 
 class ActiveTabNotifier extends StateNotifier<int> {
-  ActiveTabNotifier() : super(1); // Default to Explore (1)
+  ActiveTabNotifier() : super(1); // Mặc định là tab Khám phá (1)
 
   void setTab(int index) {
     state = index;

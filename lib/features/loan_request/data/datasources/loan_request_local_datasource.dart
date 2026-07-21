@@ -6,25 +6,25 @@ import '../../../../core/error/exceptions.dart';
 import '../../../../core/storage/local_storage.dart';
 import '../models/loan_request_model.dart';
 
-/// Local DataSource for loan requests.
-/// Handles saving/loading drafts and pending requests.
+/// Nguồn dữ liệu cục bộ (Local DataSource) cho các yêu cầu mượn thiết bị.
+/// Xử lý việc lưu/tải các bản nháp và các yêu cầu đang chờ đồng bộ.
 abstract class LoanRequestLocalDataSource {
-  /// Save a draft loan request
+  /// Lưu bản nháp của yêu cầu mượn
   Future<void> saveDraft(LoanRequestModel request);
 
-  /// Load a saved draft for a specific device
+  /// Tải bản nháp đã lưu cho một thiết bị cụ thể
   LoanRequestModel? loadDraft(String deviceId);
 
-  /// Delete a draft
+  /// Xóa bản nháp
   Future<void> deleteDraft(String deviceId);
 
-  /// Save a pending request (for retry when offline)
+  /// Lưu yêu cầu đang chờ xử lý (để thử lại khi ngoại tuyến)
   Future<void> savePendingRequest(LoanRequestModel request, String deviceName);
 
-  /// Get all pending requests
+  /// Lấy tất cả các yêu cầu đang chờ xử lý
   List<Map<String, dynamic>> getPendingRequests();
 
-  /// Remove a pending request
+  /// Xóa một yêu cầu đang chờ xử lý khỏi hàng đợi
   Future<void> removePendingRequest(int index);
 }
 
@@ -36,7 +36,7 @@ class LoanRequestLocalDataSourceImpl implements LoanRequestLocalDataSource {
   @override
   Future<void> saveDraft(LoanRequestModel request) async {
     try {
-      // Store drafts as a map keyed by deviceId
+      // Lưu các bản nháp dưới dạng map với khóa là deviceId
       final draftsJson =
           _localStorage.getString(StorageConstants.loanDraft) ?? '{}';
       final Map<String, dynamic> drafts = json.decode(draftsJson);

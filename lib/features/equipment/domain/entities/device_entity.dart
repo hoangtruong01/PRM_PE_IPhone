@@ -1,14 +1,14 @@
 // lib/features/equipment/domain/entities/device_entity.dart
 
-/// Domain Entity: Represents a device in the business logic layer.
-/// This is a pure Dart class with no framework dependencies.
-/// The Entity defines WHAT the business cares about, not HOW data is stored/fetched.
+/// Thực thể Domain (Domain Entity): Đại diện cho một thiết bị trong lớp logic nghiệp vụ.
+/// Đây là lớp Dart thuần túy và không phụ thuộc vào bất kỳ framework nào.
+/// Lớp Entity này chỉ định nghĩa những gì nghiệp vụ cần quan tâm, chứ không quan tâm cách lưu trữ/truy xuất dữ liệu.
 class DeviceEntity {
   final String id;
   final String name;
 
-  // Data from the API's nested "data" object — all optional because
-  // the restful-api.dev schema varies per object.
+  // Dữ liệu từ thuộc tính "data" lồng ghép của API — tất cả đều không bắt buộc
+  // vì cấu trúc của restful-api.dev thay đổi tùy thuộc vào từng đối tượng thiết bị.
   final String? color;
   final String? capacity;
   final double? price;
@@ -19,7 +19,7 @@ class DeviceEntity {
   final String? description;
   final double? deposit;
 
-  /// Inferred category based on the device name (Laptop, Phone, etc.)
+  /// Danh mục được suy luận dựa trên tên thiết bị (Laptop, Phone, v.v.)
   final String category;
 
   const DeviceEntity({
@@ -37,11 +37,11 @@ class DeviceEntity {
     required this.category,
   });
 
-  /// Display-friendly formatted price
+  /// Định dạng giá để hiển thị thân thiện với người dùng
   String get formattedPrice =>
       price != null ? '\$${price!.toStringAsFixed(0)}' : 'N/A';
 
-  /// Display-friendly formatted deposit
+  /// Định dạng tiền đặt cọc để hiển thị thân thiện với người dùng
   String get formattedDeposit =>
       deposit != null ? '\$${deposit!.toStringAsFixed(0)}' : 'N/A';
 

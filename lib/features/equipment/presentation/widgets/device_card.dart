@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import '../../domain/entities/device_entity.dart';
 
-/// A card widget that displays a device summary in the catalogue list.
-/// Matches the UI reference: category box on the left, name, year, price & deposit on the right.
+/// Widget thẻ hiển thị tóm tắt thông tin thiết bị trong danh sách danh mục.
+/// Khớp với giao diện thiết kế: hộp danh mục ở bên trái, tên, năm, giá trị và tiền cọc ở bên phải.
 class DeviceCard extends StatelessWidget {
   final DeviceEntity device;
   final bool isInWatchlist;
@@ -66,7 +66,7 @@ class DeviceCard extends StatelessWidget {
           padding: const EdgeInsets.all(12),
           child: Row(
             children: [
-              // Large Category badge on the left
+              // Huy hiệu Danh mục lớn ở bên trái (Large Category badge on the left)
               Container(
                 width: 80,
                 height: 80,
@@ -87,7 +87,7 @@ class DeviceCard extends StatelessWidget {
               ),
               const SizedBox(width: 16),
 
-              // Device info in the center
+              // Thông tin thiết bị ở giữa (Device info in the center)
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -123,7 +123,7 @@ class DeviceCard extends StatelessWidget {
                 ),
               ),
 
-              // Action buttons (Bookmark and Compare)
+              // Các nút hành động (Bookmark và So sánh) (Action buttons)
               Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [

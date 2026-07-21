@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 
-/// Horizontal scrollable category filter chips.
-/// Matches the UI reference: All, Laptop, Phone, etc.
+/// Các nút (chips) lọc danh mục có thể cuộn theo chiều ngang.
+/// Khớp với thiết kế UI: All, Laptop, Phone, v.v.
 class CategoryFilterChips extends StatelessWidget {
   final List<String> categories;
   final String selectedCategory;

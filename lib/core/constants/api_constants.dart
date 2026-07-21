@@ -6,12 +6,12 @@ class ApiConstants {
   static const String baseUrl = 'https://api.restful-api.dev';
   static const String objectsEndpoint = '/objects';
 
-  /// GET all devices
+  /// Lấy tất cả thiết bị (GET)
   static String get devicesUrl => '$baseUrl$objectsEndpoint';
 
-  /// GET single device by id
+  /// Lấy chi tiết một thiết bị theo ID (GET)
   static String deviceByIdUrl(String id) => '$baseUrl$objectsEndpoint/$id';
 
-  /// POST loan request
+  /// Gửi yêu cầu mượn thiết bị (POST)
   static String get loanRequestUrl => '$baseUrl$objectsEndpoint';
 }

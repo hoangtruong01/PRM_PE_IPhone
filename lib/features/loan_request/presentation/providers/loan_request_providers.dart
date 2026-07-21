@@ -18,7 +18,7 @@ import '../../domain/usecases/submit_loan_request_usecase.dart';
 import '../../../../app/providers.dart';
 import 'loan_request_state.dart';
 
-// ─── DataSource Providers ────────────────────────────────────────
+// ─── DataSource Providers (Cung cấp nguồn dữ liệu) ─────────────────
 
 final loanRequestRemoteDataSourceProvider =
     Provider<LoanRequestRemoteDataSource>((ref) {
@@ -31,7 +31,7 @@ final loanRequestLocalDataSourceProvider =
   return LoanRequestLocalDataSourceImpl(localStorage);
 });
 
-// ─── Repository Provider ─────────────────────────────────────────
+// ─── Repository Provider (Cung cấp kho lưu trữ) ────────────────────
 
 final loanRequestRepositoryProvider =
     FutureProvider<LoanRequestRepository>((ref) async {
@@ -44,7 +44,7 @@ final loanRequestRepositoryProvider =
   );
 });
 
-// ─── UseCase Providers ───────────────────────────────────────────
+// ─── UseCase Providers (Cung cấp các UseCase nghiệp vụ) ──────────────
 
 final submitLoanRequestUseCaseProvider =
     FutureProvider<SubmitLoanRequestUseCase>((ref) async {
@@ -70,14 +70,14 @@ final deleteDraftUseCaseProvider =
   return DeleteDraftUseCase(repository);
 });
 
-// ─── State Providers ──────────────────────────────────────────────
+// ─── State Providers (Cung cấp State) ──────────────────────────────
 
 final loanRequestFormStateProvider = StateNotifierProvider.autoDispose<
     LoanRequestFormNotifier, LoanRequestFormState>((ref) {
   return LoanRequestFormNotifier(ref);
 });
 
-// ─── State Notifier ──────────────────────────────────────────────
+// ─── State Notifier (Bộ quản lý State) ─────────────────────────────
 
 class LoanRequestFormNotifier extends StateNotifier<LoanRequestFormState> {
   final Ref _ref;
@@ -168,7 +168,7 @@ class LoanRequestFormNotifier extends StateNotifier<LoanRequestFormState> {
   }
 }
 
-// ─── Pending Request Sync Provider ────────────────────────────────
+// ─── Provider Đồng Bộ Yêu Cầu Đang Chờ (Pending Request Sync Provider) ──
 
 final pendingRequestSyncProvider = StateNotifierProvider<PendingRequestSyncNotifier, bool>((ref) {
   return PendingRequestSyncNotifier(ref);
@@ -178,7 +178,7 @@ class PendingRequestSyncNotifier extends StateNotifier<bool> {
   final Ref _ref;
 
   PendingRequestSyncNotifier(this._ref) : super(false) {
-    // Listen to network status changes. When we go from offline to online, sync!
+    // Lắng nghe sự thay đổi của kết nối mạng. Khi đi từ ngoại tuyến (offline) sang trực tuyến (online), tiến hành đồng bộ!
     _ref.listen<bool>(isOfflineProvider, (previous, current) {
       if (previous == true && current == false) {
         syncPendingRequests();
@@ -187,7 +187,7 @@ class PendingRequestSyncNotifier extends StateNotifier<bool> {
   }
 
   Future<void> syncPendingRequests() async {
-    if (state) return; // Already syncing
+    if (state) return; // Đang đồng bộ rồi
     state = true;
     try {
       final localDataSource = await _ref.read(loanRequestLocalDataSourceProvider.future);
@@ -199,7 +199,7 @@ class PendingRequestSyncNotifier extends StateNotifier<bool> {
         return;
       }
 
-      // Sync backwards to safely delete completed items by index
+      // Đồng bộ ngược từ cuối hàng đợi để xóa các mục đã hoàn thành theo chỉ mục một cách an toàn
       for (int i = pending.length - 1; i >= 0; i--) {
         final item = pending[i];
         final requestMap = item['request'] as Map<String, dynamic>;
@@ -211,7 +211,7 @@ class PendingRequestSyncNotifier extends StateNotifier<bool> {
           await remoteDataSource.submitLoanRequest(model, deviceName: deviceName);
           await localDataSource.removePendingRequest(i);
         } catch (_) {
-          // If individual POST fails, it stays in the queue to be retried
+          // Nếu một yêu cầu POST cụ thể thất bại, nó sẽ ở lại trong hàng đợi để thử lại lần sau
         }
       }
     } catch (_) {}

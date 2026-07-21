@@ -1,38 +1,38 @@
 // lib/core/storage/local_storage.dart
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// Wrapper around SharedPreferences for type-safe local storage operations.
+/// Lớp bọc SharedPreferences để thực hiện các thao tác lưu trữ cục bộ an toàn về kiểu dữ liệu (type-safe).
 class LocalStorage {
   final SharedPreferences _prefs;
 
   LocalStorage(this._prefs);
 
-  /// Save a string value
+  /// Lưu một giá trị kiểu String
   Future<bool> saveString(String key, String value) {
     return _prefs.setString(key, value);
   }
 
-  /// Get a string value
+  /// Lấy một giá trị kiểu String
   String? getString(String key) {
     return _prefs.getString(key);
   }
 
-  /// Save a list of strings
+  /// Lưu danh sách các chuỗi (List<String>)
   Future<bool> saveStringList(String key, List<String> value) {
     return _prefs.setStringList(key, value);
   }
 
-  /// Get a list of strings
+  /// Lấy danh sách các chuỗi (List<String>)
   List<String>? getStringList(String key) {
     return _prefs.getStringList(key);
   }
 
-  /// Remove a key
+  /// Xóa một khóa (key)
   Future<bool> remove(String key) {
     return _prefs.remove(key);
   }
 
-  /// Check if key exists
+  /// Kiểm tra sự tồn tại của khóa (key)
   bool containsKey(String key) {
     return _prefs.containsKey(key);
   }

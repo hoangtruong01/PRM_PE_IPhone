@@ -5,9 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../equipment/presentation/pages/equipment_catalogue_page.dart'; // To use CampusBottomNavBar
 
-/// Screen D — Request Result
-/// Shows the loan request confirmation with data from the POST response.
-/// Displays: Request ID, Device, Loan period, Deposit, Status.
+/// Màn hình D — Kết quả yêu cầu mượn thiết bị
+/// Hiển thị xác nhận yêu cầu mượn với dữ liệu trả về từ phản hồi của POST.
+/// Hiển thị: Mã yêu cầu, Thiết bị, Thời hạn mượn, Tiền cọc, Trạng thái.
 class RequestResultPage extends ConsumerWidget {
   final Map<String, dynamic> resultData;
 
@@ -27,7 +27,7 @@ class RequestResultPage extends ConsumerWidget {
     final returnDateStr = resultData['returnDate']?.toString();
     final deposit = resultData['deposit'];
 
-    // Parse dates
+    // Phân tích ngày tháng (Parse dates)
     DateTime? borrowDate;
     DateTime? returnDate;
     try {
@@ -35,7 +35,7 @@ class RequestResultPage extends ConsumerWidget {
       if (returnDateStr != null) returnDate = DateTime.parse(returnDateStr);
     } catch (_) {}
 
-    // Format loan period to dd-dd MMM (e.g. 01-07 Aug)
+    // Định dạng thời gian mượn sang dạng dd-dd MMM (ví dụ: 01-07 Aug)
     String loanPeriod = 'N/A';
     if (borrowDate != null && returnDate != null) {
       final startDay = borrowDate.day.toString().padLeft(2, '0');
@@ -45,7 +45,7 @@ class RequestResultPage extends ConsumerWidget {
       loanPeriod = '$startDay-$endDay $monthStr';
     }
 
-    // Format deposit
+    // Định dạng tiền đặt cọc
     String depositStr = 'N/A';
     if (deposit != null) {
       if (deposit is num) {
@@ -80,13 +80,13 @@ class RequestResultPage extends ConsumerWidget {
           children: [
             const SizedBox(height: 24),
 
-            // Checkmark Circle matching mockup D
+            // Vòng tròn dấu tích (Checkmark) khớp với bản vẽ mẫu D
             Center(
               child: Container(
                 width: 90,
                 height: 90,
                 decoration: const BoxDecoration(
-                  color: Color(0xFFE0F2F1), // Light green-teal bg
+                  color: Color(0xFFE0F2F1), // Màu nền teal nhạt
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
@@ -98,7 +98,7 @@ class RequestResultPage extends ConsumerWidget {
             ),
             const SizedBox(height: 24),
 
-            // Title "Loan request created"
+            // Tiêu đề "Yêu cầu mượn thiết bị đã được tạo"
             const Text(
               'Loan request created',
               style: TextStyle(
@@ -109,7 +109,7 @@ class RequestResultPage extends ConsumerWidget {
             ),
             const SizedBox(height: 6),
 
-            // Subtitle "Request ID #ff808181"
+            // Phụ đề "Mã yêu cầu #ff808181" hoặc thông báo Offline
             Text(
               isOffline ? 'Saved locally (Pending Sync)' : 'Request ID #$requestId',
               style: TextStyle(
@@ -119,7 +119,7 @@ class RequestResultPage extends ConsumerWidget {
             ),
             const SizedBox(height: 32),
 
-            // Details Container Box matching mockup D
+            // Hộp chi tiết (Details Box) khớp với bản vẽ mẫu D
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(16),
@@ -147,7 +147,7 @@ class RequestResultPage extends ConsumerWidget {
 
             const SizedBox(height: 32),
 
-            // BACK TO DEVICES button
+            // Nút "QUAY LẠI THIẾT BỊ" (BACK TO DEVICES)
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(

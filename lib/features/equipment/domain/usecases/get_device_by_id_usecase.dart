@@ -4,14 +4,14 @@ import '../../../../core/utils/result.dart';
 import '../entities/device_entity.dart';
 import '../repositories/equipment_repository.dart';
 
-/// UseCase: Get a single device by its ID.
-/// Follows the Single Responsibility Principle — one action per class.
+/// UseCase: Lấy thông tin một thiết bị cụ thể theo ID.
+/// Tuân thủ Nguyên tắc Đơn nhiệm (Single Responsibility Principle) — mỗi lớp chỉ thực hiện một nghiệp vụ duy nhất.
 class GetDeviceByIdUseCase {
   final EquipmentRepository _repository;
 
   GetDeviceByIdUseCase(this._repository);
 
-  /// Execute the use case with a device ID
+  /// Thực thi UseCase với ID của thiết bị
   Future<Result<DeviceEntity>> call(String id) {
     return _repository.getDeviceById(id);
   }

@@ -5,17 +5,17 @@ import '../../../../core/error/exceptions.dart';
 import '../../../../core/storage/local_storage.dart';
 import '../models/device_model.dart';
 
-/// Local DataSource: Handles caching of device data in SharedPreferences.
-/// Provides offline support — when the remote API is unavailable,
-/// the Repository can fall back to cached data.
+/// Nguồn dữ liệu cục bộ (Local DataSource): Xử lý việc lưu cache dữ liệu thiết bị vào SharedPreferences.
+/// Cung cấp hỗ trợ ngoại tuyến — khi remote API không khả dụng,
+/// Repository có thể chuyển sang sử dụng dữ liệu đã lưu trong cache này.
 abstract class EquipmentLocalDataSource {
-  /// Get cached devices
+  /// Lấy các thiết bị từ cache cục bộ
   Future<List<DeviceModel>> getCachedDevices();
 
-  /// Cache a list of devices
+  /// Lưu danh sách các thiết bị vào cache cục bộ
   Future<void> cacheDevices(List<DeviceModel> devices);
 
-  /// Check if cached data exists
+  /// Kiểm tra xem dữ liệu cache có tồn tại không
   bool hasCachedDevices();
 }
 

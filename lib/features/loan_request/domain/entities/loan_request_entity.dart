@@ -1,7 +1,7 @@
 // lib/features/loan_request/domain/entities/loan_request_entity.dart
 
-/// Domain Entity: Represents a loan request in the business logic layer.
-/// Pure Dart class — no framework dependencies.
+/// Thực thể Domain (Domain Entity): Đại diện cho yêu cầu mượn thiết bị trong lớp logic nghiệp vụ.
+/// Lớp Dart thuần túy — không phụ thuộc vào framework.
 class LoanRequestEntity {
   final String deviceId;
   final String studentId;
@@ -21,13 +21,13 @@ class LoanRequestEntity {
     this.status = 'pending',
   });
 
-  /// Calculate loan period in days
+  /// Tính số ngày mượn thiết bị
   int get loanPeriodDays => returnDate.difference(borrowDate).inDays;
 
-  /// Validation: loan period must not exceed 14 days
+  /// Xác thực: Thời hạn mượn không vượt quá 14 ngày
   bool get isValidLoanPeriod => loanPeriodDays > 0 && loanPeriodDays <= 14;
 
-  /// Validation: borrow date must be today or later
+  /// Xác thực: Ngày bắt đầu mượn phải từ ngày hôm nay trở đi
   bool get isValidBorrowDate {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
@@ -35,7 +35,7 @@ class LoanRequestEntity {
     return !borrow.isBefore(today);
   }
 
-  /// Validation: return date must be after borrow date
+  /// Xác thực: Ngày trả thiết bị phải sau ngày mượn
   bool get isValidReturnDate => returnDate.isAfter(borrowDate);
 
   @override

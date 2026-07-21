@@ -2,59 +2,59 @@
 
 import '../../domain/entities/device_entity.dart';
 
-// ─── Equipment List States ───────────────────────────────────────
+// ─── Các trạng thái của danh sách thiết bị ────────────────────────
 
-/// Base state for the equipment list screen
+/// Trạng thái cơ sở cho màn hình danh sách thiết bị
 sealed class EquipmentListState {
   const EquipmentListState();
 }
 
-/// Initial state before any data is loaded
+/// Trạng thái ban đầu trước khi bất kỳ dữ liệu nào được tải
 class EquipmentListInitial extends EquipmentListState {
   const EquipmentListInitial();
 }
 
-/// Loading state while fetching devices
+/// Trạng thái đang tải trong khi lấy thông tin danh sách thiết bị
 class EquipmentListLoading extends EquipmentListState {
   const EquipmentListLoading();
 }
 
-/// Loaded state with list of devices
+/// Trạng thái đã tải thành công với danh sách thiết bị kèm theo
 class EquipmentListLoaded extends EquipmentListState {
   final List<DeviceEntity> devices;
   const EquipmentListLoaded(this.devices);
 }
 
-/// Empty state when no devices are available
+/// Trạng thái trống khi không có thiết bị nào
 class EquipmentListEmpty extends EquipmentListState {
   const EquipmentListEmpty();
 }
 
-/// Error state with error message
+/// Trạng thái lỗi kèm theo thông điệp lỗi
 class EquipmentListError extends EquipmentListState {
   final String message;
   const EquipmentListError(this.message);
 }
 
-// ─── Device Detail States ────────────────────────────────────────
+// ─── Các trạng thái của chi tiết thiết bị ─────────────────────────
 
-/// Base state for the device detail screen
+/// Trạng thái cơ sở cho màn hình chi tiết thiết bị
 sealed class DeviceDetailState {
   const DeviceDetailState();
 }
 
-/// Loading state while fetching device details
+/// Trạng thái đang tải trong khi lấy chi tiết thiết bị
 class DeviceDetailLoading extends DeviceDetailState {
   const DeviceDetailLoading();
 }
 
-/// Loaded state with device details
+/// Trạng thái đã tải thành công chi tiết thiết bị
 class DeviceDetailLoaded extends DeviceDetailState {
   final DeviceEntity device;
   const DeviceDetailLoaded(this.device);
 }
 
-/// Error state with error message
+/// Trạng thái lỗi kèm theo thông điệp lỗi
 class DeviceDetailError extends DeviceDetailState {
   final String message;
   const DeviceDetailError(this.message);

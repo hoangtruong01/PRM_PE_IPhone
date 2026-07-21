@@ -8,13 +8,13 @@ import '../../domain/repositories/equipment_repository.dart';
 import '../datasources/equipment_local_datasource.dart';
 import '../datasources/equipment_remote_datasource.dart';
 
-/// Repository Implementation (Data Layer)
-/// Implements the domain's EquipmentRepository interface.
-/// Coordinates between remote and local data sources.
-/// Converts exceptions from data sources into Failures for the domain layer.
+/// Triển khai Repository (Data Layer)
+/// Triển khai giao diện EquipmentRepository của lớp domain.
+/// Điều phối hoạt động giữa các nguồn dữ liệu từ xa và cục bộ.
+/// Chuyển đổi ngoại lệ từ các nguồn dữ liệu thành các Lỗi (Failures) cho lớp domain.
 ///
-/// Flow: Remote → Cache → Return entities
-/// Fallback: If remote fails → try cache → if cache fails → return error
+/// Luồng hoạt động: Remote → Cache → Trả về các thực thể (entities)
+/// Dự phòng: Nếu lấy từ remote lỗi → thử lấy từ cache → nếu cache lỗi → trả về lỗi
 class EquipmentRepositoryImpl implements EquipmentRepository {
   final EquipmentRemoteDataSource _remoteDataSource;
   final EquipmentLocalDataSource _localDataSource;
@@ -28,27 +28,27 @@ class EquipmentRepositoryImpl implements EquipmentRepository {
   @override
   Future<Result<List<DeviceEntity>>> getDevices() async {
     try {
-      // Try remote first
+      // Thử lấy dữ liệu từ remote trước
       final models = await _remoteDataSource.getDevices();
 
-      // Cache the result for offline use
+      // Lưu kết quả vào cache để sử dụng khi ngoại tuyến
       await _localDataSource.cacheDevices(models);
 
-      // Convert models to entities
+      // Chuyển đổi các models thành thực thể (entities)
       final entities = models.map((m) => m.toEntity()).toList();
       return Success(entities);
     } on ServerException catch (e) {
-      // Remote failed — try cache as fallback
+      // Lấy từ remote thất bại — thử lấy từ cache làm phương án dự phòng
       try {
         final cachedModels = await _localDataSource.getCachedDevices();
         final entities = cachedModels.map((m) => m.toEntity()).toList();
         return Success(entities);
       } on CacheException {
-        // Both remote and cache failed
+        // Cả remote và cache đều thất bại
         return Error(ServerFailure(e.message, statusCode: e.statusCode));
       }
     } catch (e) {
-      // Unexpected error — try cache
+      // Lỗi không mong muốn — thử lấy từ cache
       try {
         final cachedModels = await _localDataSource.getCachedDevices();
         final entities = cachedModels.map((m) => m.toEntity()).toList();
@@ -65,7 +65,7 @@ class EquipmentRepositoryImpl implements EquipmentRepository {
       final model = await _remoteDataSource.getDeviceById(id);
       return Success(model.toEntity());
     } on ServerException catch (e) {
-      // Try to find in cached list
+      // Thử tìm thiết bị trong danh sách đã lưu cache
       try {
         final cachedModels = await _localDataSource.getCachedDevices();
         final model = cachedModels.firstWhere(

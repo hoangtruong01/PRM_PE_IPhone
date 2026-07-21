@@ -4,8 +4,8 @@ import '../../../../core/utils/result.dart';
 import '../entities/loan_request_entity.dart';
 import '../repositories/loan_request_repository.dart';
 
-/// UseCase: Submit a loan request.
-/// Validates the request before submitting.
+/// UseCase: Gửi yêu cầu mượn thiết bị.
+/// Xác thực yêu cầu trước khi gửi.
 class SubmitLoanRequestUseCase {
   final LoanRequestRepository _repository;
 

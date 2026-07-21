@@ -3,14 +3,14 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../error/exceptions.dart';
 
-/// A thin wrapper around http.Client for consistent error handling.
-/// Widgets and use cases never call this directly — only DataSources do.
+/// Lớp bọc ngoài http.Client để xử lý lỗi một cách thống nhất.
+/// Widget và UseCase không bao giờ gọi trực tiếp lớp này — chỉ các DataSource mới sử dụng nó.
 class NetworkClient {
   final http.Client _client;
 
   NetworkClient(this._client);
 
-  /// Performs a GET request and returns decoded JSON
+  /// Thực hiện yêu cầu GET và trả về JSON đã được giải mã
   Future<dynamic> get(String url) async {
     try {
       final response = await _client.get(
@@ -33,7 +33,7 @@ class NetworkClient {
     }
   }
 
-  /// Performs a POST request and returns decoded JSON
+  /// Thực hiện yêu cầu POST và trả về JSON đã được giải mã
   Future<dynamic> post(String url, Map<String, dynamic> body) async {
     try {
       final response = await _client.post(

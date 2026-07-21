@@ -8,9 +8,9 @@ import '../providers/equipment_providers.dart';
 import '../providers/equipment_state.dart';
 import 'equipment_catalogue_page.dart'; // To use CampusBottomNavBar
 
-/// Screen B — Device Detail
-/// Shows device information with optional/missing data fallback.
-/// Provides the "REQUEST THIS DEVICE" button to navigate to loan form.
+/// Màn hình B — Chi tiết thiết bị
+/// Hiển thị thông tin thiết bị và các phương án xử lý nếu dữ liệu bị khuyết thiếu.
+/// Cung cấp nút "REQUEST THIS DEVICE" để chuyển sang biểu mẫu đăng ký mượn thiết bị.
 class EquipmentDetailPage extends ConsumerWidget {
   final String deviceId;
 
@@ -109,20 +109,20 @@ class EquipmentDetailPage extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Device image placeholder container matching mockup B
+            // Khung hiển thị ảnh thiết bị (placeholder) khớp với bản vẽ mẫu B
             Container(
               width: double.infinity,
               height: 200,
               margin: const EdgeInsets.only(top: 8, bottom: 20),
               decoration: BoxDecoration(
-                color: const Color(0xFFE0F2F1), // Light green-teal bg
+                color: const Color(0xFFE0F2F1), // Nền xanh-teal nhạt
                 borderRadius: BorderRadius.circular(12),
               ),
               child: const Center(
                 child: Text(
                   'DEVICE IMAGE',
                   style: TextStyle(
-                    color: Color(0xFF0E9282), // Teal color text
+                    color: Color(0xFF0E9282), // Chữ màu teal
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1.5,
@@ -131,7 +131,7 @@ class EquipmentDetailPage extends ConsumerWidget {
               ),
             ),
 
-            // Device Name
+            // Tên thiết bị (Device Name)
             Text(
               device.name,
               style: const TextStyle(
@@ -142,7 +142,7 @@ class EquipmentDetailPage extends ConsumerWidget {
             ),
             const SizedBox(height: 4),
 
-            // Subtitle
+            // Phụ đề (Subtitle)
             Text(
               '${device.category} • Year ${device.year ?? "Unknown"}',
               style: TextStyle(
@@ -152,7 +152,7 @@ class EquipmentDetailPage extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
 
-            // Estimated Value
+            // Giá trị ước tính (Estimated Value)
             Text(
               'Estimated value: ${device.formattedPrice}',
               style: const TextStyle(
@@ -163,7 +163,7 @@ class EquipmentDetailPage extends ConsumerWidget {
             ),
             const SizedBox(height: 20),
 
-            // Spec Box Table (CPU and Deposit)
+            // Bảng hộp thông số kỹ thuật (CPU và tiền đặt cọc)
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(16),
@@ -175,7 +175,7 @@ class EquipmentDetailPage extends ConsumerWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // CPU Label & Value
+                  // Nhãn & Giá trị CPU (CPU Label & Value)
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -199,7 +199,7 @@ class EquipmentDetailPage extends ConsumerWidget {
                       ],
                     ),
                   ),
-                  // Deposit Label & Value
+                  // Nhãn & Giá trị Tiền đặt cọc (Deposit Label & Value)
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
@@ -227,7 +227,7 @@ class EquipmentDetailPage extends ConsumerWidget {
 
             const SizedBox(height: 20),
 
-            // Loan Policy Section
+            // Phần Chính sách mượn thiết bị (Loan Policy Section)
             const Text(
               'Loan policy',
               style: TextStyle(
@@ -248,7 +248,7 @@ class EquipmentDetailPage extends ConsumerWidget {
 
             const SizedBox(height: 32),
 
-            // REQUEST THIS DEVICE Button
+            // Nút gửi yêu cầu mượn thiết bị này (REQUEST THIS DEVICE Button)
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(

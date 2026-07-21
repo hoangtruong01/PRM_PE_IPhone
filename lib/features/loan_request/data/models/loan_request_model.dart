@@ -4,8 +4,8 @@ import 'dart:convert';
 import '../../../../core/utils/date_utils.dart';
 import '../../domain/entities/loan_request_entity.dart';
 
-/// Data Model for loan requests.
-/// Handles serialization to/from JSON for API and local storage.
+/// Mô hình dữ liệu (Data Model) cho các yêu cầu mượn thiết bị.
+/// Xử lý việc chuyển đổi qua lại JSON cho API và bộ nhớ cục bộ.
 class LoanRequestModel {
   final String deviceId;
   final String studentId;
@@ -25,7 +25,7 @@ class LoanRequestModel {
     this.status = 'pending',
   });
 
-  /// Create from domain entity
+  /// Tạo model từ thực thể Domain (Entity)
   factory LoanRequestModel.fromEntity(LoanRequestEntity entity) {
     return LoanRequestModel(
       deviceId: entity.deviceId,
@@ -38,7 +38,7 @@ class LoanRequestModel {
     );
   }
 
-  /// Convert to domain entity
+  /// Chuyển đổi thành thực thể Domain (Entity)
   LoanRequestEntity toEntity() {
     return LoanRequestEntity(
       deviceId: deviceId,
@@ -51,7 +51,7 @@ class LoanRequestModel {
     );
   }
 
-  /// Convert to API POST body format matching the exam requirement:
+  /// Chuyển đổi sang định dạng body của API POST khớp với yêu cầu đề thi:
   /// {
   ///   "name": "Campus Equipment Loan Request",
   ///   "data": {
@@ -80,7 +80,7 @@ class LoanRequestModel {
     };
   }
 
-  /// Convert to JSON for local draft storage
+  /// Chuyển đổi sang JSON để lưu trữ bản nháp cục bộ
   Map<String, dynamic> toJson() {
     return {
       'deviceId': deviceId,
@@ -93,7 +93,7 @@ class LoanRequestModel {
     };
   }
 
-  /// Create from local draft JSON
+  /// Tạo model từ JSON bản nháp cục bộ
   factory LoanRequestModel.fromJson(Map<String, dynamic> json) {
     return LoanRequestModel(
       deviceId: json['deviceId'] as String,
@@ -106,10 +106,10 @@ class LoanRequestModel {
     );
   }
 
-  /// Convert to JSON string for storage
+  /// Chuyển đổi thành chuỗi JSON để lưu trữ
   String toJsonString() => json.encode(toJson());
 
-  /// Create from JSON string
+  /// Tạo model từ chuỗi JSON
   factory LoanRequestModel.fromJsonString(String jsonString) {
     return LoanRequestModel.fromJson(json.decode(jsonString));
   }

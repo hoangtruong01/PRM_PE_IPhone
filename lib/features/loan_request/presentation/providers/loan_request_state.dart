@@ -1,6 +1,6 @@
 // lib/features/loan_request/presentation/providers/loan_request_state.dart
 
-/// States for the loan request form
+/// Các trạng thái của form yêu cầu mượn thiết bị
 sealed class LoanRequestFormState {
   const LoanRequestFormState();
 }

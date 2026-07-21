@@ -10,9 +10,9 @@ import '../widgets/category_filter_chips.dart';
 import '../widgets/device_card.dart';
 import '../widgets/search_bar_widget.dart';
 
-/// Screen A — Device Catalogue
-/// Displays a list of devices with search, category filter, and watchlist.
-/// Modified to support active tabs: Home, Explore, Saved, Profile.
+/// Màn hình A — Danh mục thiết bị
+/// Hiển thị danh sách thiết bị có tìm kiếm, bộ lọc danh mục và danh sách theo dõi.
+/// Được chỉnh sửa để hỗ trợ các tab: Trang chủ, Khám phá, Đã lưu, Hồ sơ.
 class EquipmentCataloguePage extends ConsumerWidget {
   const EquipmentCataloguePage({super.key});
 
@@ -29,7 +29,7 @@ class EquipmentCataloguePage extends ConsumerWidget {
 
     const activeTeal = Color(0xFF0E9282);
 
-    // Determine AppBar title based on active tab
+    // Xác định tiêu đề AppBar dựa trên tab đang hoạt động
     String titleText = 'Campus Equipment';
     if (activeTab == 0) titleText = 'Dashboard';
     if (activeTab == 2) titleText = 'Saved Devices';
@@ -55,7 +55,7 @@ class EquipmentCataloguePage extends ConsumerWidget {
         ),
         actions: activeTab == 1
             ? [
-                // Sort Menu (only shown on Explore tab)
+                // Menu sắp xếp (chỉ hiển thị ở tab Khám phá)
                 PopupMenuButton<DeviceSortOption>(
                   icon: const Icon(Icons.sort_rounded, color: Colors.black87),
                   onSelected: (val) {
@@ -76,7 +76,7 @@ class EquipmentCataloguePage extends ConsumerWidget {
                     ),
                   ],
                 ),
-                // Refresh Button
+                // Nút tải lại (Refresh)
                 IconButton(
                   icon: const Icon(Icons.refresh_rounded, color: Colors.black87),
                   onPressed: () {
@@ -95,10 +95,10 @@ class EquipmentCataloguePage extends ConsumerWidget {
       ),
       body: Column(
         children: [
-          // Offline Banner
+          // Banner Ngoại tuyến (Offline Banner)
           if (isOffline) _buildOfflineBanner(),
 
-          // Dynamic Body based on selected tab
+          // Thân trang động thay đổi theo tab được chọn
           Expanded(
             child: _buildTabBody(
               context,
@@ -172,7 +172,7 @@ class EquipmentCataloguePage extends ConsumerWidget {
     }
   }
 
-  // ─── TAB 0: HOME / DASHBOARD ───────────────────────────────────────
+  // ─── TAB 0: TRANG CHỦ / BẢNG ĐIỀU KHIỂN ─────────────────────────────
 
   Widget _buildHomeTab(
     BuildContext context,
@@ -188,7 +188,7 @@ class EquipmentCataloguePage extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Welcome Card
+          // Thẻ Chào mừng (Welcome Card)
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(20),
@@ -221,7 +221,7 @@ class EquipmentCataloguePage extends ConsumerWidget {
           ),
           const SizedBox(height: 24),
 
-          // Statistics header
+          // Tiêu đề Thống kê (Statistics header)
           const Text(
             'Your Statistics',
             style: TextStyle(
@@ -232,7 +232,7 @@ class EquipmentCataloguePage extends ConsumerWidget {
           ),
           const SizedBox(height: 12),
 
-          // Statistics row
+          // Hàng Thống kê (Statistics row)
           Row(
             children: [
               Expanded(
@@ -254,7 +254,7 @@ class EquipmentCataloguePage extends ConsumerWidget {
                   color: const Color(0xFFF3E5F5),
                   textColor: Colors.purple.shade800,
                   onTap: () {
-                    // Show explore tab to select devices
+                    // Chuyển sang tab khám phá để chọn thiết bị
                     ref.read(activeTabProvider.notifier).setTab(1);
                   },
                 ),
@@ -263,7 +263,7 @@ class EquipmentCataloguePage extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
 
-          // Connection status card
+          // Thẻ trạng thái kết nối (Connection status card)
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
@@ -304,7 +304,7 @@ class EquipmentCataloguePage extends ConsumerWidget {
           ),
           const SizedBox(height: 32),
 
-          // Explore CTA button
+          // Nút kêu gọi hành động (CTA) Khám phá (Explore CTA button)
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
@@ -369,7 +369,7 @@ class EquipmentCataloguePage extends ConsumerWidget {
     );
   }
 
-  // ─── TAB 1: EXPLORE / CATALOGUE ────────────────────────────────────
+  // ─── TAB 1: KHÁM PHÁ / DANH MỤC ────────────────────────────────────
 
   Widget _buildExploreTab(
     BuildContext context,
@@ -387,7 +387,7 @@ class EquipmentCataloguePage extends ConsumerWidget {
       children: [
         const SizedBox(height: 8),
 
-        // Search bar
+        // Thanh tìm kiếm (Search bar)
         SearchBarWidget(
           onChanged: (query) {
             ref.read(searchQueryProvider.notifier).state = query;
@@ -396,7 +396,7 @@ class EquipmentCataloguePage extends ConsumerWidget {
 
         const SizedBox(height: 12),
 
-        // Category filter chips
+        // Các nút lọc danh mục (Category filter chips)
         CategoryFilterChips(
           categories: categories,
           selectedCategory: selectedCategory,
@@ -407,7 +407,7 @@ class EquipmentCataloguePage extends ConsumerWidget {
 
         const SizedBox(height: 8),
 
-        // Content area
+        // Vùng hiển thị nội dung (Content area)
         Expanded(
           child: _buildContent(
             context,
@@ -419,7 +419,7 @@ class EquipmentCataloguePage extends ConsumerWidget {
           ),
         ),
 
-        // View Watchlist Button (Teal button matching Screen A)
+        // Nút Xem Danh sách theo dõi (Nút màu Teal khớp với Màn hình A)
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: ElevatedButton(
@@ -449,7 +449,7 @@ class EquipmentCataloguePage extends ConsumerWidget {
     );
   }
 
-  // ─── TAB 2: SAVED / WATCHLIST ──────────────────────────────────────
+  // ─── TAB 2: ĐÃ LƯU / DANH SÁCH THEO DÕI ─────────────────────────────
 
   Widget _buildSavedTab(
     BuildContext context,
@@ -535,7 +535,7 @@ class EquipmentCataloguePage extends ConsumerWidget {
     );
   }
 
-  // ─── TAB 3: PROFILE ────────────────────────────────────────────────
+  // ─── TAB 3: HỒ SƠ ──────────────────────────────────────────────────
 
   Widget _buildProfileTab(BuildContext context, WidgetRef ref, bool isOffline) {
     return SingleChildScrollView(
@@ -543,7 +543,7 @@ class EquipmentCataloguePage extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Student details header
+          // Tiêu đề thông tin chi tiết sinh viên (Student details header)
           Center(
             child: Column(
               children: [
@@ -573,7 +573,7 @@ class EquipmentCataloguePage extends ConsumerWidget {
           ),
           const SizedBox(height: 12),
 
-          // User Info Box
+          // Hộp thông tin người dùng (User Info Box)
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
@@ -599,7 +599,7 @@ class EquipmentCataloguePage extends ConsumerWidget {
           ),
           const SizedBox(height: 12),
 
-          // Mock Loan History Item
+          // Mục lịch sử mượn giả lập (Mock Loan History Item)
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
@@ -669,7 +669,7 @@ class EquipmentCataloguePage extends ConsumerWidget {
     );
   }
 
-  // ─── UTILS & BUILD CONTENT ─────────────────────────────────────────
+  // ─── TIỆN ÍCH & TẠO NỘI DUNG ──────────────────────────────────────────
 
   Widget _buildContent(
     BuildContext context,
@@ -885,7 +885,7 @@ class EquipmentCataloguePage extends ConsumerWidget {
   }
 }
 
-// ─── Custom Persistent Bottom Navigation Bar ──────────────────────────
+// ─── Thanh điều hướng dưới cùng tùy chỉnh (Custom Persistent Bottom Navigation Bar) ───
 
 class CampusBottomNavBar extends ConsumerWidget {
   const CampusBottomNavBar({super.key});

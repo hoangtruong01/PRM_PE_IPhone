@@ -5,14 +5,14 @@ import '../../../../core/error/exceptions.dart';
 import '../../../../core/network/network_client.dart';
 import '../models/device_model.dart';
 
-/// Remote DataSource: Handles all HTTP communication with the API.
-/// Only this class knows about the network; Repository doesn't care
-/// whether data comes from HTTP, WebSocket, or GraphQL.
+/// Nguồn dữ liệu từ xa (Remote DataSource): Xử lý toàn bộ giao tiếp HTTP với API.
+/// Chỉ có lớp này biết về hạ tầng mạng; Repository không cần quan tâm
+/// dữ liệu được lấy từ HTTP, WebSocket, hay GraphQL.
 abstract class EquipmentRemoteDataSource {
-  /// Fetch all devices from the remote API
+  /// Lấy tất cả thiết bị từ remote API
   Future<List<DeviceModel>> getDevices();
 
-  /// Fetch a single device by ID from the remote API
+  /// Lấy thông tin một thiết bị theo ID từ remote API
   Future<DeviceModel> getDeviceById(String id);
 }
 

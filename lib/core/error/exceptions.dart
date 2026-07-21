@@ -1,6 +1,6 @@
 // lib/core/error/exceptions.dart
 
-/// Exception thrown when a server request fails
+/// Ngoại lệ ném ra khi yêu cầu từ máy chủ (server) thất bại
 class ServerException implements Exception {
   final String message;
   final int? statusCode;
@@ -10,7 +10,7 @@ class ServerException implements Exception {
   String toString() => 'ServerException: $message (status: $statusCode)';
 }
 
-/// Exception thrown when cache operation fails
+/// Ngoại lệ ném ra khi thao tác bộ nhớ đệm (cache) thất bại
 class CacheException implements Exception {
   final String message;
   const CacheException(this.message);
@@ -19,7 +19,7 @@ class CacheException implements Exception {
   String toString() => 'CacheException: $message';
 }
 
-/// Exception thrown when there is no network
+/// Ngoại lệ ném ra khi không có kết nối mạng
 class NetworkException implements Exception {
   final String message;
   const NetworkException([this.message = 'No internet connection']);
